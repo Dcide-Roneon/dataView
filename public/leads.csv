@@ -1,0 +1,12 @@
+id,company,dataCenter,latitude,longitude,mwCapacity,certifications
+1,Acme,NorthDC,40.1,-74.2,10,ISO 27001
+2,Acme,WestDC,41.5,-73.8,12,ISO 27001;SOC 2
+3,Globex,MainDC,39.8,-75.0,15,PCI DSS
+4,Globex,EastDC,38.2,-76.1,9,ISO 27001
+5,Umbrella,AlphaDC,40.1,-74.2,7,ISO 9001
+6,Umbrella,BetaDC,37.8,-122.4,8,SOC 2
+7,Wayne,MetroDC,40.1,-74.2,20,ISO 27001;PCI DSS
+8,Wayne,WestDC,41.5,-73.8,22,ISO 9001
+9,LexCorp,CentralDC,39.0,-77.0,13,PCI DSS
+10,LexCorp,MetroDC,38.9,-77.1,14,ISO 27001;SOC 2
+11,Fentigo Enterprises,NorthDC,40.1,-74.2,10,ISO 27001
