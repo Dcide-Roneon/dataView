@@ -30,9 +30,6 @@
 └── leads.csv # Optional fallback CSV
 
 /src
-├── api/
-│ ├── leadsApi.js # All API calls and filtering logic
-│ └── supabaseClient.js # Optional if using Supabase
 ├── components/
 │ ├── Form.jsx # Presentational form
 │ ├── FormContainer.jsx # Logic, state, validation
@@ -42,6 +39,8 @@
 ├── utils/
 │ ├── distance.js # Haversine formula
 │ └── validation.js # Input validation
+| └── api.js #All API calls and filtration logic
+| └── supabaseClient.js - optional if we decide to migrate to supabase
 └── pages/
 └── Home.jsx # Layout
 
@@ -52,8 +51,7 @@
 
 ```bash
 # Clone the repo
-git clone https://github.com/your-username/dcide.git
-cd dcide
+git clone https://github.com/Dcide-Roneon/dataView.git
 
 # Install dependencies
 npm install
