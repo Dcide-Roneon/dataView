@@ -4,6 +4,7 @@ import {
     isValidLatitude,
     isValidLongitude,
 } from "../components/validation.js";
+import { Select } from "@mui/material";
 
  const initialFormState = {
         company: " ",
@@ -12,6 +13,7 @@ import {
         longitude: "",
         mwCapacity: "",
         certifications:"",
+        industry: "",
     };//use state vasriables
 
     function Form() {
@@ -79,6 +81,22 @@ import {
                     onChange={handleChange}
                     placeholder="Certifications"
                 />
+                <Select 
+                    label="industry"
+                    name="industry"
+                    id="industry"
+                    value={form.industry}
+                    onChange={onChange}
+                    fullWidth
+                >
+                    <MenuItem value="Telecomms"> Telecomms</MenuItem>
+                    <MenuItem value="Architecture & Planning">Architecture & Planning</MenuItem>
+                    <MenuItem value="Retail"> Retail </MenuItem>
+                    <MenuItem value="Finance"> Finance </MenuItem>
+                    <MenuItem value="Education">Education </MenuItem>
+                    <MenuItem value="Manufacturing"> Manufacturing</MenuItem>
+                    <MenuItem value="Utilities">Utilities</MenuItem>
+                </Select>
             </form>
         );
     }

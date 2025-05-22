@@ -1,112 +1,115 @@
-// pure logic, state, validation, events
-import React, { useState , useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import {
-    isValidCapacity,
-    isValidLatitude,
-    isValidLongitude,
-} from "../components/validation.js";
+  isValidCapacity,
+  isValidLatitude,
+  isValidLongitude,
+} from "../utils/validation.js";
 import Form from "./Form.jsx";
-import {fetchAndParseCsv} from "./csv.js";
-import ResultsTable from "./ResultsTable.jsx";
 import LinearWithValueLabel from "./loading.jsx";
 import ResultsList from "./resultList.jsx";
+import { Button } from "@mui/material";
+import {
+  fetchFilteredLeads
+} from "../utils/api.js";
 
+const initialFormState = {
+  company: "",
+  dataCenter: "",
+  latitude: "",
+  longitude: "",
+  radius: "",
+  mwCapacity: "",
+  certifications: "",
+  industry: "",
+};
 
- const initialFormState = {
-        company: " ",
-        dataCenter: "",
-        latitude:"",
-        longitude: "",
-        mwCapacity: "",
-        certifications:"",
-    };//use state vasriables
+const FormContainer = () => {
+  const [form, setForm] = useState(initialFormState);
+  const [errors, setErrors] = useState({});
+  const [results, setResults] = useState([]);
+  const [searchDone, setSearchDone] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-    function FormContainer() {
-        const [form,setForm]= useState(initialFormState);
-        const[errors, setErrors]= useState({});
-        const [csvData, setCsvData] = useState([]);
-        const [results, setResults] = useState([]);
-        const [searchDone, setSearchDone] = useState(false);
-        const[isLoading, setIsLoading] = useState(false);
+  const handleReset = () => {
+    setForm(initialFormState);
+    setErrors({});
+    setResults([]);
+    setSearchDone(false);
+  };
+  const handleSubmit = async(e) => {
+    e.preventDefault();
+    const newErrors = {};
+    // Required fields
+    if (!isValidLatitude(form.latitude)) {
+      newErrors.latitude = "Latitude must be a number between -90 and 90.";
+    }
+    if (!isValidLongitude(form.longitude)) {
+      newErrors.longitude = "Longitude must be a number between -180 and 180.";
+    }
+    if (!form.radius || isNaN(form.radius) || Number(form.radius) <= 0) {
+      newErrors.radius = "Radius must be a positive number.";
+    }
 
-        useEffect(() => {
-            fetchAndParseCsv("/leads.csv")
-            .then((data) => setCsvData(data))
-            .catch((err) => {
-                console.error("CSV fetch/parse error", err)
-            });
-        }, []);
+    // Optional field
+    if (form.mwCapacity && !isValidCapacity(form.mwCapacity)) {
+      newErrors.mwCapacity = "MW Capacity must be a positive number.";
+    }
 
-        function handleChange(e){ //How input changes are handled
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    // Begin loading and filtering
+    setErrors({});
+    setIsLoading(true);
+    setSearchDone(false);
+
+  
+        const matches = await fetchFilteredLeads(form);
+        console.log("matches found:", matches);
+        setResults(matches);
+        setSearchDone(true);
+        setIsLoading(false)
+  };
+  return (
+    <>
+      <Form
+        form={form}
+        errors={errors}
+        onChange={(e)=>{
             setForm({
                 ...form,
                 [e.target.name]: e.target.value,
             });
             setErrors({...errors, [e.target.name]: ""});
-        }
-        function handleSubmit(e) {
-            e.preventDefault();
-            const newErrors = {};
-          
-            if (!isValidLatitude(form.latitude)) {
-              newErrors.latitude = "Latitude must be a number between -90 and 90.";
-            }
-            if (!isValidLongitude(form.longitude)) {
-              newErrors.longitude = "Longitude must be a number between -180 and 180.";
-            }
+        }}
+        onSubmit={handleSubmit}
+      />
+      <Button
+        variant="outlined"
+        color="secondary"
+        onClick={handleReset}
+        sx={{ mt: 2 }}
+      >
+        Reset
+      </Button>
 
-            //optional
-          
-            if (form.mwCapacity && !isValidCapacity(form.mwCapacity)) {
-              newErrors.mwCapacity = "MW Capacity must be a positive number.";
-            }
-        
-            if (Object.keys(newErrors).length > 0) {
-              setErrors(newErrors);
-              return;
-            }
-            setErrors({});
-            setIsLoading(true);
-            setSearchDone(false);          
+      {isLoading && (
+        <div style={{ marginTop: "20px" }}>
+          <LinearWithValueLabel />
+        </div>
+      )}
 
+      {searchDone && !isLoading && (
+        <ResultsList
+          results={results}
+          userLat={Number(form.latitude)}
+          userLng={Number(form.longitude)}
+        />
+      )}
+    </>
+  );
+};
 
-            setTimeout(() => {
-                const matches = csvData.filter(row =>
-                    Number(row.latitude) === Number(form.latitude.trim()) &&
-                    Number(row.longitude) === Number(form.longitude.trim()) &&
-                    (!form.company || row.company?.trim().toLowerCase() === form.company?.trim().toLowerCase()) &&
-                    (!form.dataCenter || row.dataCenter?.trim().toLowerCase() === form.dataCenter?.trim().toLowerCase()) &&
-                    (!form.certifications || row.certifications?.toLowerCase().includes(form.certifications?.trim().toLowerCase())) &&
-                    (!form.mwCapacity || Number(row.mwCapacity) === Number(form.mwCapacity.trim()))
-                  );                
-              console.log("form.latitude:", form.latitude, "form.longitude:", form.longitude);
-              console.log("typeof form.latitude:", typeof form.latitude); // debugging
-              
-              setResults(matches);
-              setSearchDone(true); 
-              setIsLoading(false);
-              console.log("Form submitted: ", form);
-
-            }, 1000); //loading delay
-        
-
-            
-        }
-        return (
-            <>
-                <Form
-                    form={form}
-                    errors={errors}
-                    onChange={handleChange}
-                    onSubmit={handleSubmit}
-                />
-                {isLoading && (
-                    <div style={{ marginTop: "20px"}}>
-                        <LinearWithValueLabel />
-                    </div> 
-                )}
-                {searchDone &&!isLoading && <ResultsList results={results} />}
-            </>
-        );
-    }
-    export default FormContainer;
+export default FormContainer;

@@ -1,23 +1,20 @@
 import React from "react";
-import ResultCard from "./practice";
+import ResultCard from "./ResultsCard";
 import { Typography } from "@mui/material";
 
-const ResultsList = ({ results }) => {
-  if (results.length === 0) {
-    return (
-      <Typography variant="body1" sx={{ mt: 2 }}>
-        No results found.
-      </Typography>
-    );
+function ResultsList({ results = [] }) {
+  console.log(results);
+  if (!Array.isArray(results) || results.length === 0) {
+    return <div>No results found</div>;
   }
 
   return (
-    <div style={{ marginTop: "20px" }}>
-      {results.map((row) => (
-        <ResultCard key={row.id} row={row} />
+    <div>
+      {results.map((row, index) => (
+        <ResultCard key={index} row={row} />
       ))}
     </div>
   );
-};
+}
 
 export default ResultsList;

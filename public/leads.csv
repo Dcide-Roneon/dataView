@@ -1,12 +1,21 @@
-id,company,dataCenter,latitude,longitude,mwCapacity,certifications
-1,Acme,NorthDC,40.1,-74.2,10,ISO 27001
-2,Acme,WestDC,41.5,-73.8,12,ISO 27001;SOC 2
-3,Globex,MainDC,39.8,-75.0,15,PCI DSS
-4,Globex,EastDC,38.2,-76.1,9,ISO 27001
-5,Umbrella,AlphaDC,40.1,-74.2,7,ISO 9001
-6,Umbrella,BetaDC,37.8,-122.4,8,SOC 2
-7,Wayne,MetroDC,40.1,-74.2,20,ISO 27001;PCI DSS
-8,Wayne,WestDC,41.5,-73.8,22,ISO 9001
-9,LexCorp,CentralDC,39.0,-77.0,13,PCI DSS
-10,LexCorp,MetroDC,38.9,-77.1,14,ISO 27001;SOC 2
-11,Fentigo Enterprises,NorthDC,40.1,-74.2,10,ISO 27001
+id,company,dataCenter,latitude,longitude,capacity,certifications,industry
+1,Globex,NorthDC,40.647215,-73.978455,10,ISO 27001,Architecture & Planning
+2,Acme,MainDC,40.591751,-73.941152,10,LEED Gold,Retail
+3,Wayne,NorthDC,40.655024,-73.943075,20,LEED Gold,Education
+4,Acme,AlphaDC,40.746162,-73.946661,40,ISO 27001,Architecture & Planning
+5,Umbrella,MetroDC,40.732798,-73.916725,30,ISO 27001,Retail
+6,Wayne,CentralDC,40.506166,-74.089951,20,Tier III,Education
+7,Wayne,BetaDC,40.681646,-73.993729,10,LEED Gold,Utilities
+8,Umbrella,NorthDC,40.656804,-74.024124,10,LEED Gold,Retail
+9,LexCorp,AlphaDC,40.606629,-74.064952,40,LEED Gold,Education
+10,Umbrella,NorthDC,40.683934,-74.076201,20,ISO 27001,Manufacturing
+11,Globex,WestDC,40.649852,-74.012718,50,LEED Gold,Retail
+12,Umbrella,BetaDC,40.686864,-73.960925,20,ISO 27001,Education
+13,Umbrella,CentralDC,40.714845,-74.000113,10,LEED Gold,Utilities
+14,Wayne,AlphaDC,40.588524,-73.921293,30,ISO 27001,Architecture & Planning
+15,Umbrella,EastDC,40.508364,-73.97327,30,ISO 27001,Telecomms
+16,Wayne,BetaDC,40.756908,-74.052556,20,ISO 27001,Retail
+17,Acme,MainDC,40.636664,-74.031334,50,Tier III,Telecomms
+18,Acme,BetaDC,40.746843,-73.949947,10,ISO 27001,Retail
+19,Acme,BetaDC,40.601437,-74.017811,20,LEED Gold,Education
+20,Globex,MetroDC,40.618315,-73.965096,10,ISO 27001,Manufacturing
