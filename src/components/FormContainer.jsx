@@ -15,11 +15,10 @@ import {
 const initialFormState = {
   company: "",
   dataCenter: "",
-  latitude: "",
-  longitude: "",
+  latlng: "",
   radius: "",
   mwCapacity: "",
-  certifications: "",
+  certifications: [],
   industry: "",
 };
 
@@ -29,6 +28,8 @@ const FormContainer = () => {
   const [results, setResults] = useState([]);
   const [searchDone, setSearchDone] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [userLat, setUserLat]= useState(null);
+  const [userLng, setUserLng] = useState(null);
 
   const handleReset = () => {
     setForm(initialFormState);
@@ -39,13 +40,19 @@ const FormContainer = () => {
   const handleSubmit = async(e) => {
     e.preventDefault();
     const newErrors = {};
+
+    const latLngPart= form.latlng.trim().split(/[\s,]+/);
+    const latitude = parseFloat(latLngPart[0]);
+    const longitude = parseFloat(latLngPart[1]);
+
+    setUserLat(latitude);
+    setUserLng(longitude);
+
+    if (latLngPart.length !== 2 || isNaN(latitude) || isNaN(longitude)){
+      newErrors.latlng="Enter Valid Coordinates";
+    }
+    
     // Required fields
-    if (!isValidLatitude(form.latitude)) {
-      newErrors.latitude = "Latitude must be a number between -90 and 90.";
-    }
-    if (!isValidLongitude(form.longitude)) {
-      newErrors.longitude = "Longitude must be a number between -180 and 180.";
-    }
     if (!form.radius || isNaN(form.radius) || Number(form.radius) <= 0) {
       newErrors.radius = "Radius must be a positive number.";
     }
@@ -66,12 +73,22 @@ const FormContainer = () => {
     setSearchDone(false);
 
   
-        const matches = await fetchFilteredLeads(form);
+    fetchFilteredLeads({...form, latitude, longitude})
+      .then((matches)  => {
         console.log("matches found:", matches);
         setResults(matches);
         setSearchDone(true);
-        setIsLoading(false)
-  };
+        
+
+      })
+      .catch((err) => {
+        console.error("search error", err);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+        
+  }
   return (
     <>
       <Form
@@ -104,8 +121,8 @@ const FormContainer = () => {
       {searchDone && !isLoading && (
         <ResultsList
           results={results}
-          userLat={Number(form.latitude)}
-          userLng={Number(form.longitude)}
+          userLat={userLat}
+          userLng={userLng}
         />
       )}
     </>

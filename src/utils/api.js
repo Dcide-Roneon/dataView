@@ -1,60 +1,62 @@
 // src/api/leadsApi.js
-import supabase from "./supabaseClient"; // optional if not using
 import { getDistanceFromLatLonInKm } from "./distance";
 import URL from "./xanoClient";
+import { renderToStaticMarkup } from "react-dom/server";
 
 export async function fetchFilteredLeads(form) {
-  if (!form.latitude || !form.longitude || !form.radius) {
+  const{
+    latitude,
+    longitude,
+    radius, 
+    company,
+    dataCenter,
+    certifications,
+    mwCapacity,
+    industry,
+  } = form;
+  console.log(latitude, longitude, radius)
+  if (!latitude || !longitude || !radius) {
     console.warn("Latitude, longitude and radius are required");
     return [];
   }
+  
 
   const response = await fetch(URL);
   const data = await response.json();
 
+  console.log("data is:", latitude, longitude, renderToStaticMarkup);
+
   // Filter by radius
- const userLat = Number(form.latitude.trim());
-const userLng = Number(form.longitude.trim());
-const radius = Number(form.radius);
+const leadsByDistance = data.filter((lead) =>{
+  const distance = getDistanceFromLatLonInKm(
+    Number(latitude),
+    Number(longitude),
+    Number(lead.latitude),
+    Number(lead.longitude)
+  );
+  lead._distance = distance;
+  return distance <= Number(radius);
+});
+const formCerts = form.certifications;
+const filtered = leadsByDistance.filter(lead =>{
+  const matchesCert=
+    formCerts.length === 0 ||
+    formCerts.some(cert => lead.certifications.includes(cert));
 
-
-const leadsByDistance = data
-  .map((lead) => {
-    const lat = Number(lead.latitude);
-    const lng = Number(lead.longitude);
-
-    if (isNaN(lat) || isNaN(lng)) {
-      console.warn("Invalid coordinates for:", lead.company);
-      return null;
-    }
-
-    const distance = getDistanceFromLatLonInKm(userLat, userLng, lat, lng);
-    return {
-      ...lead,
-      _distance: distance,
-    };
-  })
-  .filter((lead) => {
-    const isWithin = lead._distance <= radius;
-    console.log(`${lead.company} is ${lead._distance.toFixed(2)} km — ${isWithin ? "✅ MATCH" : "❌ Too far"}`);
-    return isWithin;
-  });
-
-console.log("Final matches:", leadsByDistance);
-  //OPTIONAL FIELDS 
-  const finalMatches = leadsByDistance.filter((lead) => {
-    if (typeof lead._distance !== "number") {
-      console.warn(`Invalid _distance for ${lead.company}:`, lead._distance);
-}
-
-    return (
+    return(
+      matchesCert &&
       (!form.company || lead.company?.toLowerCase() === form.company?.trim().toLowerCase()) &&
       (!form.dataCenter || lead.dataCenter?.toLowerCase() === form.dataCenter?.trim().toLowerCase()) &&
-      (!form.certifications || lead.certifications?.toLowerCase().includes(form.certifications?.trim().toLowerCase())) &&
       (!form.mwCapacity || Number(lead.capacity) === Number(form.mwCapacity.trim())) &&
       (!form.industry || lead.industry?.toLowerCase() === form.industry?.trim().toLowerCase())
+
     );
   });
-  return finalMatches;
-  
+
+  const sorted = filtered.sort((a,b) => {
+      const aMatches = formCerts.filter(cert => a.certifications.includes(cert)).length;
+      const bMatches = formCerts.filter(cert=> b.certifications.includes(cert)).length;
+      return bMatches - aMatches
+  });
+  return sorted;
 }

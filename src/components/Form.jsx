@@ -1,8 +1,46 @@
 // Pure UI, no logic.
-import React from "react";
-import { Grid, TextField, Button, Select, MenuItem } from "@mui/material";
+import React, { useState }from "react";
+import { Grid, TextField, Button, Select, MenuItem, Checkbox, ListItemText, InputLabel, FormControl, OutlinedInput,Divider,} from "@mui/material";
+
+const certOptions =[
+  "ISO14001",
+  "ISO22301",
+  "PCI-DSS",
+  "ISO50001",
+  "ISO27001",
+  "SOC-I",
+  "SOC-II",
+  "LEED",
+  ];
 
 const Form = ({ form, errors, onChange, onSubmit }) => {
+
+  const[certFilter,setCertFilter] = useState("");
+
+  const selectedCerts = Array.isArray(form.certifications)
+    ?form.certifications
+    : [];
+
+  const filteredCerts =certOptions.filter((cert) => 
+    cert.toLowerCase().includes(certFilter.toLowerCase())
+  );
+  const handleCertChange = (event) => {
+    const { value } = event.target;
+    onChange({
+      target: {
+        name: "certifications",
+        value: typeof value === "string"? value.split(","): value,
+      },
+    });
+  };
+  const handleSelectAll = () => {
+    if (selectedCerts.length === certOptions.length) {
+      onChange({ target: { name: "certifications", value: [] } });
+    } else {
+      onChange({ target: { name: "certifications", value: certOptions } });
+    }
+  };
+
   return (
     <form onSubmit={onSubmit} autoComplete="off">
       <Grid container spacing={2}>
@@ -30,28 +68,15 @@ const Form = ({ form, errors, onChange, onSubmit }) => {
         </Grid>
         <Grid item xs={6}>
           <TextField
-            label="Latitude"
-            name="latitude"
-            value={form.latitude}
+            label="Latitude & Longitude"
+            name="latlng"
+            value={form.latlng}
             onChange={onChange}
             fullWidth
+            placeholder="e.g. 40.7128,-74.0060 or 40.7128 -74.0060"
             required
-            type="number"
-            error={!!errors.latitude}
-            helperText={errors.latitude}
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <TextField
-            label="Longitude"
-            name="longitude"
-            value={form.longitude}
-            onChange={onChange}
-            fullWidth
-            required
-            type="number"
-            error={!!errors.longitude}
-            helperText={errors.longitude}
+            error={!!errors.latlng}
+            helperText={errors.latlng}
           />
         </Grid>
         <Grid item xs={12}>
@@ -78,17 +103,64 @@ const Form = ({ form, errors, onChange, onSubmit }) => {
             helperText={errors.mwCapacity}
           />
         </Grid>
-        <Grid item xs={12}>
-          <TextField
-            label="Certifications"
+        <FormControl sx={{ width: 300 }}>
+          <InputLabel id="certifications-label">Certifications</InputLabel>
+          <Select
+            labelId="certifications-label"
+            id="certifications"
             name="certifications"
-            value={form.certifications}
-            onChange={onChange}
-            fullWidth
-            error={!!errors.certifications}
-            helperText={errors.certifications}
-          />
-        </Grid>
+            multiple
+            value={selectedCerts}
+            onChange={handleCertChange}
+            input={<OutlinedInput label="Certifications" />}
+            renderValue={(selected) => selected.join(", ")}
+            MenuProps={{
+              PaperProps: {
+                style: {
+                  maxHeight: 300,
+                  width: 300,
+                },
+              },
+            }}
+          >
+            <MenuItem disableRipple disableGutters>
+              <TextField
+                placeholder="Search..."
+                value={certFilter}
+                onChange={(e) => setCertFilter(e.target.value)}
+                size="small"
+                fullWidth
+              />
+            </MenuItem>
+
+            <MenuItem onClick={handleSelectAll}>
+              <Checkbox
+                checked={selectedCerts.length === certOptions.length}
+                indeterminate={
+                  selectedCerts.length > 0 &&
+                  selectedCerts.length < certOptions.length
+                }
+              />
+              <ListItemText
+                primary={
+                  selectedCerts.length === certOptions.length
+                    ? "Deselect All"
+                    : "Select All"
+                }
+              />
+            </MenuItem>
+
+            <Divider />
+
+            {filteredCerts.map((cert) => (
+              <MenuItem key={cert} value={cert}>
+                <Checkbox checked={selectedCerts.includes(cert)} />
+                <ListItemText primary={cert} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
         <Grid item xs={12}>
           <Select 
             label="industry"

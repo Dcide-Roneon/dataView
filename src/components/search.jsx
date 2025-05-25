@@ -9,8 +9,7 @@ import { Select } from "@mui/material";
  const initialFormState = {
         company: " ",
         dataCenter: "",
-        latitude:"",
-        longitude: "",
+        latlng: "",
         mwCapacity: "",
         certifications:"",
         industry: "",
@@ -28,11 +27,11 @@ import { Select } from "@mui/material";
         function handleSubmit(e){
             e.preventDefault();
 
-            if(!isValidLatitude(form.latitude)){
+            if(!isValidLatitude(latitude)){
                 alert("Latitude must be a number between -80 and 80");
                 return;
             }
-            if(!isValidLongitude(form.longitude)){
+            if(!isValidLongitude(longitude)){
                 alert("Longitude must be a number between -180 and 180");
                 return;
             }
