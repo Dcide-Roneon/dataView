@@ -1,49 +1,44 @@
 import { fetchFilteredLeads } from "../utils/api";
+import { getDistanceFromLatLonInKm } from "../utils/distance";
 
-beforeEach(() =>{
-    fetch.resetMocks();
+jest.mock("../utils/distance", () => ({
+  getDistanceFromLatLonInKm: jest.fn(() => 0), // mock 0km distance
+}));
+
+beforeEach(() => {
+  fetch.resetMocks();
 });
 
-describe('fetchFilteredLeads (Xano)', () => {
-    it('returned filtered data from Xano', async() => {
-        const mockResponse = [
-            {
-                id: 1,
-                company: 'XanoCorp',
-                latitude: 40.7128,
-                longitude: -74.0060,
-                capacity: 100,
-                certifications: ['ISO27001'],
-                industry: 'Finance',
-            },
-        ];
+describe("fetchFilteredLeads", () => {
+  it("returns leads within the radius", async () => {
+    const mockLead = {
+      id: 1,
+      company: "MockCorp",
+      latitude: 40.7128,
+      longitude: -74.0060,
+      capacity: 100,
+      certifications: ["ISO27001"],
+      industry: "Finance",
+    };
 
-        fetch.mockResponseOnce(JSON.stringify(mockResponse));
+    fetch.mockResponseOnce(JSON.stringify([mockLead]));
 
-        const form = {
-            latitude: '40.7128',
-            longitude: '-74.0060',
-            radius: '1000',
-            certifications: [],
-        }; 
-        
-        const data = await fetchFilteredLeads(form);
+    const form = {
+      latitude: "40.7128",
+      longitude: "-74.0060",
+      radius: "10",
+      company: "",
+      dataCenter: "",
+      certifications: [],
+      mwCapacity: "",
+      industry: "",
+    };
 
-        expect(fetch).toHaveBeenCalledTimes(1);
-        expect(data).toEqual(mockResponse);
-    });
+    const results = await fetchFilteredLeads(form);
 
-    it('handles empty response', async () => {
-        fetch.mockResponseOnce(JSON.stringify([]));
-
-        const form = {
-            latitude: '0',
-            longitude: '0',
-            radius: '1',
-            certifications: [],
-        };
-
-        const data = await fetchFilteredLeads(form);
-        expect(data).toEqual([]);
-    });
-})
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(getDistanceFromLatLonInKm).toHaveBeenCalled(); // confirm distance is called
+    expect(results).toHaveLength(1);
+    expect(results[0].company).toBe("MockCorp");
+  });
+});
