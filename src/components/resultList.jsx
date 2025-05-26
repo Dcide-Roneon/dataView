@@ -1,6 +1,7 @@
 import React from "react";
 import ResultCard from "./ResultsCard";
-import { Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
+import downloadToCsv from "../utils/downloadToCsv";
 
 function ResultsList({ results = [] }) {
   console.log(results);
@@ -10,6 +11,15 @@ function ResultsList({ results = [] }) {
 
   return (
     <div>
+      <Button
+      variant="outlined"
+      color="primary"
+      onClick={()=> downloadToCsv(results)}
+      sx={{mb:2}}
+      >
+        Download
+      </Button>
+
       {results.map((row, index) => (
         <ResultCard key={index} row={row} />
       ))}

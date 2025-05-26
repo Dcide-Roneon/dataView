@@ -123,6 +123,8 @@ const Form = ({ form, errors, onChange, onSubmit }) => {
               },
             }}
           >
+            {/* searching is pointless right now
+            
             <MenuItem disableRipple disableGutters>
               <TextField
                 placeholder="Search..."
@@ -132,6 +134,7 @@ const Form = ({ form, errors, onChange, onSubmit }) => {
                 fullWidth
               />
             </MenuItem>
+            */}
 
             <MenuItem onClick={handleSelectAll}>
               <Checkbox
