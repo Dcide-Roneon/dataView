@@ -8,6 +8,7 @@ import {
 import FilterForm from "./filterForm.jsx";
 import LinearWithValueLabel from "./loading.jsx";
 import ResultsList from "./resultList.jsx";
+import MapView from "./mapView.jsx";
 import { Button, Box } from "@mui/material";
 import { fetchFilteredLeads } from "../utils/api.js";
 import FilterPanel from "./filterPanel.jsx";
@@ -23,14 +24,17 @@ const initialFormState = {
 };
 
 const FilterFormContainer = () => {
-  const [form, setForm] = useState(initialFormState);           // current input values
-  const [submittedForm, setSubmittedForm] = useState(null);     // last submitted snapshot
+  const [form, setForm] = useState(initialFormState);
+  const [submittedForm, setSubmittedForm] = useState(null);
   const [errors, setErrors] = useState({});
   const [results, setResults] = useState([]);
   const [searchDone, setSearchDone] = useState(false);
+  const [hoveredIndex, setHoveredIndex] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [radiusKm, setRadiusKm] = useState(null);
   const [userLat, setUserLat] = useState(null);
   const [userLng, setUserLng] = useState(null);
+  const resultsLimit = 3;
 
   const handleReset = () => {
     setForm(initialFormState);
@@ -38,6 +42,9 @@ const FilterFormContainer = () => {
     setErrors({});
     setResults([]);
     setSearchDone(false);
+    setUserLat(null);
+    setUserLng(null);
+    setRadiusKm(null);
   };
 
   const handleSubmit = async (e) => {
@@ -50,6 +57,7 @@ const FilterFormContainer = () => {
 
     setUserLat(latitude);
     setUserLng(longitude);
+    setRadiusKm(Number(form.radius));
 
     if (latLngPart.length !== 2 || isNaN(latitude) || isNaN(longitude)) {
       newErrors.latlng = "Enter Valid Coordinates";
@@ -74,7 +82,7 @@ const FilterFormContainer = () => {
     try {
       const matches = await fetchFilteredLeads({ ...form, latitude, longitude });
       console.log("matches found:", matches);
-      setSubmittedForm({ ...form });  // store snapshot
+      setSubmittedForm({ ...form });
       setResults(matches);
       setSearchDone(true);
     } catch (err) {
@@ -85,11 +93,12 @@ const FilterFormContainer = () => {
   };
 
   const handleFilterChange = (updatedForm) => {
-    setForm(updatedForm);  // this updates inputs, but NOT the results
+    setForm(updatedForm);
   };
 
   return (
     <Box sx={{ height: '100vh', width: '100vw', padding: 2 }}>
+      {/* Reset Button */}
       <Box display="flex" justifyContent="flex-end">
         {searchDone && (
           <Button
@@ -103,7 +112,8 @@ const FilterFormContainer = () => {
         )}
       </Box>
 
-      {!searchDone ? (
+      {/* Initial Form */}
+      {!searchDone && (
         <FilterForm
           form={form}
           errors={errors}
@@ -113,9 +123,12 @@ const FilterFormContainer = () => {
           }}
           onSubmit={handleSubmit}
         />
-      ) : (
-        <Box display="flex" gap={2} mt={2} sx={{ height: 'calc(100vh - 100px)', px: 2 }}>
-          {/* Sidebar Panel */}
+      )}
+
+      {/* Main Layout: Always Rendered */}
+      <Box display="flex" gap={2} mt={2} sx={{ height: 'calc(100vh - 100px)', px: 2 }}>
+        {/* Filter Panel (left) */}
+        {searchDone && (
           <Box
             sx={{
               width: 300,
@@ -135,11 +148,32 @@ const FilterFormContainer = () => {
               onReset={handleReset}
             />
           </Box>
+        )}
 
-          {/* Results Panel */}
+        {/* ✅ MapView (center) — always shown */}
+        <Box
+          sx={{
+            flexGrow: 1,
+            bgcolor: '#eef4f8',
+            borderRadius: 2,
+            overflow: 'hidden',
+            boxShadow: 1,
+            height: '100%',
+          }}
+        >
+          <MapView
+            center={searchDone && userLat && userLng ? [userLat, userLng] : null}
+            radius={searchDone ? radiusKm : null}
+            results={searchDone ? results.slice(0, resultsLimit) : []}
+            hoveredIndex={hoveredIndex}
+          />
+        </Box>
+
+        {/* Results Panel (right) */}
+        {searchDone && (
           <Box
             sx={{
-              flexGrow: 1,
+              width: 350,
               bgcolor: '#ffffff',
               p: 2,
               borderRadius: 2,
@@ -148,11 +182,16 @@ const FilterFormContainer = () => {
               height: '100%',
             }}
           >
-            <ResultsList results={results} userLat={userLat} userLng={userLng} />
+            <ResultsList
+              results={results.slice(0, resultsLimit)}
+              hoveredIndex={hoveredIndex}
+              setHoveredIndex={setHoveredIndex}
+            />
           </Box>
-        </Box>
-      )}
+        )}
+      </Box>
 
+      {/* Loader */}
       {isLoading && (
         <Box mt={4}>
           <LinearWithValueLabel />

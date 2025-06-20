@@ -207,7 +207,7 @@ const FilterForm = ({ form, errors, onChange, onSubmit, isFilter = false }) => {
               </Select>
             </FormControl>
           </Grid>
-
+          {/* TESTING!!!!
           <Grid item xs={12}>
             <Select
               label="Industry"
@@ -234,6 +234,7 @@ const FilterForm = ({ form, errors, onChange, onSubmit, isFilter = false }) => {
               <MenuItem value="Utilities">Utilities</MenuItem>
             </Select>
           </Grid>
+          */}
 
           {!isFilter && (
             <Grid item xs={12} display="flex" justifyContent="flex-end">
