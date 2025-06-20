@@ -41,12 +41,12 @@ function ResponsiveAppBar() {
     sx={{
       backgroundColor: '#f5f5f5 '
     }}>
-    <AppBar position="fixed" sx={{
+    <AppBar position="fixed" 
+    sx={{
       backgroundColor: 'whitesmoke',
       height: '82px'
-    }
-      
-    }>
+    }}
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Box
@@ -61,11 +61,12 @@ function ResponsiveAppBar() {
              }}
             >
             <Box
-              component="img"
-              src="src\assets\dcideLogo.jpg"
+              //component="img"
+              // src="src\assets\dcideLogo.jpg"
               alt="logo"
               sx={{ width:100 , height: 300, mr: 1,}}
             />
+            LOGO PLACEHOLDER
           </Box>
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton

@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import {
   isValidCapacity,
   isValidLatitude,
   isValidLongitude,
 } from "../utils/validation.js";
 import Form from "./Form.jsx";
-import LinearWithValueLabel from "./loading.jsx";
-import ResultsList from "./resultList.jsx";
+import LinearWithValueLabel from "../components/loading.jsx";
+import ResultsList from "../components/resultList.jsx";
 import { Button } from "@mui/material";
 import {
   fetchFilteredLeads
@@ -105,9 +106,9 @@ const FormContainer = () => {
       />
       <Button
         variant="outlined"
-        color="secondary"
+        startIcon={<RestartAltIcon />}
         onClick={handleReset}
-        sx={{ mt: 2 }}
+        sx={{ mt: 2,  color:'black', backgroundColor: 'whitesmoke',}}
       >
         Reset
       </Button>

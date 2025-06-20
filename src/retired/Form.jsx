@@ -1,6 +1,14 @@
 // Pure UI, no logic.
 import React, { useState }from "react";
-import { Grid, TextField, Button, Select, MenuItem, Checkbox, ListItemText, InputLabel, FormControl, OutlinedInput,Divider,} from "@mui/material";
+import { Grid, TextField, Button, Select, MenuItem, Checkbox, ListItemText, InputLabel,Box, FormControl, OutlinedInput,Divider, } from "@mui/material";
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import FactoryIcon from '@mui/icons-material/Factory';
+import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
+import BatteryChargingFullIcon from '@mui/icons-material/BatteryChargingFull';
+import PublicIcon from '@mui/icons-material/Public';
+import BusinessIcon from '@mui/icons-material/Business';
+import InputAdornment from '@mui/material/InputAdornment';
+
 
 const certOptions =[
   "ISO14001",
@@ -43,7 +51,7 @@ const Form = ({ form, errors, onChange, onSubmit }) => {
 
   return (
     <form onSubmit={onSubmit} autoComplete="off">
-      <Grid container spacing={2}>
+      <Grid container spacing={2} >
         <Grid item xs={12}>
           <TextField
             label="Company Name"
@@ -53,6 +61,20 @@ const Form = ({ form, errors, onChange, onSubmit }) => {
             fullWidth
             error={!!errors.company}
             helperText={errors.company}
+            slotProps={{
+              input:{
+                startAdornment:(
+                <InputAdornment position="start">
+                  <BusinessIcon/>
+                </InputAdornment>
+                )
+              }
+            }}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: 4, // Controls the roundness
+                },
+            }}
           />
         </Grid>
         <Grid item xs={12}>
@@ -64,6 +86,11 @@ const Form = ({ form, errors, onChange, onSubmit }) => {
             fullWidth
             error={!!errors.dataCenter}
             helperText={errors.dataCenter}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: 4, // Controls the roundness
+                },
+            }}
           />
         </Grid>
         <Grid item xs={6}>
@@ -77,6 +104,20 @@ const Form = ({ form, errors, onChange, onSubmit }) => {
             required
             error={!!errors.latlng}
             helperText={errors.latlng}
+            slotProps={{
+              input:{
+                startAdornment:(
+                <InputAdornment position="start">
+                  <PublicIcon/>
+                </InputAdornment>
+                )
+              }
+            }}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: 4, // Controls the roundness
+                },
+            }}
           />
         </Grid>
         <Grid item xs={12}>
@@ -89,6 +130,12 @@ const Form = ({ form, errors, onChange, onSubmit }) => {
             fullWidth
             error={!errors.radius}
             helperText={errors.radius}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: 4, 
+               // Controls the roundness
+                },
+            }}
           />
         </Grid>
         <Grid item xs={12}>
@@ -101,6 +148,20 @@ const Form = ({ form, errors, onChange, onSubmit }) => {
             type="number"
             error={!!errors.mwCapacity}
             helperText={errors.mwCapacity}
+            slotProps={{
+              input:{
+                startAdornment:(
+                <InputAdornment position="start">
+                  <BatteryChargingFullIcon/>
+                </InputAdornment>
+                )
+              }
+            }}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: 4, // Controls the roundness
+                },
+            }}
           />
         </Grid>
         <FormControl sx={{ width: 300 }}>
@@ -112,7 +173,15 @@ const Form = ({ form, errors, onChange, onSubmit }) => {
             multiple
             value={selectedCerts}
             onChange={handleCertChange}
-            input={<OutlinedInput label="Certifications" />}
+            input={<
+              OutlinedInput 
+                label="Certifications"
+                startAdornment={
+                  <InputAdornment position="start">
+                    <WorkspacePremiumIcon/>
+                  </InputAdornment>
+                }
+              />}
             renderValue={(selected) => selected.join(", ")}
             MenuProps={{
               PaperProps: {
@@ -122,6 +191,7 @@ const Form = ({ form, errors, onChange, onSubmit }) => {
                 },
               },
             }}
+            
           >
             {/* searching is pointless right now
             
@@ -173,7 +243,13 @@ const Form = ({ form, errors, onChange, onSubmit }) => {
             onChange={onChange}
             fullWidth
             displayEmpty
-            renderValue={(selected) => selected ? selected : "Industry"}
+            renderValue={(selected) => (
+              <Box sx={{display: 'flex', alignItems:'center', gap:1.5, fontSize: "small"}}>
+                <FactoryIcon/>
+                {selected|| "Industry"}
+              </Box>
+
+            )}
           >
             <MenuItem value=""> <em>None</em> </MenuItem>
             <MenuItem value="Telecomms"> Telecomms</MenuItem>
@@ -185,8 +261,17 @@ const Form = ({ form, errors, onChange, onSubmit }) => {
             <MenuItem value="Utilities">Utilities</MenuItem>
           </Select>
         </Grid>
-        <Grid item xs={12} display="flex" justifyContent="flex-end">
-          <Button variant="contained" color="primary" type="submit">
+
+
+        <Grid item xs={12} display="flex" justifyContent="flex-end" >
+          
+          <Button variant="contained"
+           type="submit" 
+           startIcon={<AutoAwesomeIcon/>} 
+           sx={{
+            backgroundColor:"#FAF9F6", color:"#0f56fc"
+            }}
+          >
             Generate Leads
           </Button>
         </Grid>

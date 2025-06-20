@@ -9,6 +9,7 @@ import {
     Typography,
 } from '@mui/material';
 import FormContainer from "../components/FormContainer";
+import filterFormContainer from "../components/filterFormContainer";
 
 
 const Home = () => {
@@ -24,7 +25,7 @@ const Home = () => {
             <Typography variant="h6" gutterBottom>
                 Facility Information
             </Typography>
-            <FormContainer />     
+            <filterFormContainer />     
         </Paper>
     </Container>
     );
