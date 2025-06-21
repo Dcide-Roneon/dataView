@@ -1,23 +1,32 @@
-import { MapContainer, TileLayer, Circle, Marker, Tooltip, Polyline, useMap } from 'react-leaflet';
-import L from 'leaflet';
-import { useEffect } from 'react';
+import {
+  MapContainer,
+  TileLayer,
+  Circle,
+  Marker,
+  Tooltip,
+  useMap,
+} from "react-leaflet";
+import L from "leaflet";
+import { useEffect } from "react";
 
-
-const MapView = ({ center, radius, results, hoveredIndex }) => {
-  const defaultCenter = [20, 0];
-  const zoom = center ? 8 : 2;
 const FitBounds = ({ points }) => {
   const map = useMap();
 
   useEffect(() => {
-    if (points.length === 0) return;
+    if (!Array.isArray(points) || points.length === 0) return;
 
-    const bounds = L.latLngBounds(points.map(p => [p.latitude, p.longitude]));
+    const bounds = L.latLngBounds(points.map((p) => [p.latitude, p.longitude]));
     map.fitBounds(bounds, { padding: [50, 50] });
   }, [points, map]);
 
   return null;
 };
+
+const MapView = ({ center, radius, results = [], hoveredIndex }) => {
+  const defaultCenter = [20, 0];
+  const zoom = center ? 8 : 2;
+
+  const isResultsArray = Array.isArray(results) && results.length > 0;
 
   return (
     <MapContainer
@@ -34,20 +43,20 @@ const FitBounds = ({ points }) => {
       {center && (
         <>
           <Marker position={center} />
-          <Circle center={center} radius={radius * 1000} />
+          {radius && <Circle center={center} radius={radius * 1000} />}
         </>
       )}
 
-      {results.map((row, index) => (
-        <Marker key={index} position={[row.latitude, row.longitude]}>
-          <Tooltip>
-            {row.company} ({row.latitude.toFixed(2)}, {row.longitude.toFixed(2)})
-          </Tooltip>
-        </Marker>
-      ))}
+      {isResultsArray &&
+        results.map((row, index) => (
+          <Marker key={index} position={[row.latitude, row.longitude]}>
+            <Tooltip>
+              {row.company} ({row.latitude.toFixed(2)}, {row.longitude.toFixed(2)})
+            </Tooltip>
+          </Marker>
+        ))}
 
-      {results.length > 0 && <FitBounds points={results} />}
-
+      {isResultsArray && <FitBounds points={results} />}
     </MapContainer>
   );
 };

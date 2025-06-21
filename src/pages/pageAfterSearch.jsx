@@ -4,7 +4,8 @@ import useFilterLogic from '../utils/useFilterLogic';
 import FilterPanel from '../components/filterPanel';
 import ResultsList from '../components/resultList';
 import FilterForm from '../components/filterForm';
-import MapView from '../components/mapView'; // ensure correct path/casing
+import MapView from '../components/mapView';
+import { getDistanceFromLatLonInKm } from '../utils/distance';
 
 const NewPage = () => {
   const {
@@ -20,6 +21,18 @@ const NewPage = () => {
     userLng,
   } = useFilterLogic();
 
+  const enhancedResults = results.map((r) => ({
+    ...r,
+    _distance: getDistanceFromLatLonInKm(userLat, userLng, r.latitude, r.longitude),
+  }));
+
+  const sortedResults = enhancedResults.sort((a, b) => {
+    const aDist = a._distance ?? Infinity;
+    const bDist = b._distance ?? Infinity;
+    return aDist - bDist;
+  });
+  const limitedResults = sortedResults.slice(0,3);
+
   return (
     <Box
       sx={{
@@ -32,7 +45,7 @@ const NewPage = () => {
         boxSizing: 'border-box',
       }}
     >
-      {/* Sidebar: Filter Panel (only after search) */}
+      {/* Sidebar: Filter Panel */}
       {searchDone && (
         <Box
           sx={{
@@ -83,37 +96,30 @@ const NewPage = () => {
           gap: 2,
         }}
       >
-        {/* Always-visible Map */}
-       {/* Pre-search Map (only before results) */}
-      {!searchDone && (
-        <Box sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          width: '100%'
-        }}>
-          <Box
-            sx={{
-              mt:5,
-              height: '40vh',
-              width: '45%',
-              minHeight: '300px',
-              borderRadius: 2,
-              overflow: 'hidden',
-              border: '1px solid #ccc',
-              mb: 2,
-              
-            }}
-          >
-            <MapView
-              center={null}
-              radius={null}
-              results={[]}
-              hoveredIndex={null}
-            />
+        {/* Pre-search Map (centered) */}
+        {!searchDone && (
+          <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+            <Box
+              sx={{
+                mt: 5,
+                height: '40vh',
+                width: '45%',
+                minHeight: '300px',
+                borderRadius: 2,
+                overflow: 'hidden',
+                border: '1px solid #ccc',
+                mb: 2,
+              }}
+            >
+              <MapView
+                center={null}
+                radius={null}
+                results={[]}
+                hoveredIndex={null}
+              />
+            </Box>
           </Box>
-        </Box>
-      )}
-
+        )}
 
         {/* Page Title */}
         <Box sx={{ m: 2 }}>
@@ -134,15 +140,8 @@ const NewPage = () => {
           <Divider sx={{ my: 2 }} />
         </Box>
 
-        {/* Conditional Content */}
-        {!searchDone ? (
-          <FilterForm
-            form={form}
-            errors={errors}
-            onChange={handleChange}
-            onSubmit={handleSubmit}
-          />
-        ) : (
+        {/* Post-search layout */}
+        {searchDone && (
           <Box
             sx={{
               display: 'flex',
@@ -152,7 +151,7 @@ const NewPage = () => {
               width: '100%',
             }}
           >
-            {/* Center Panel: Map again (fills central space below header) */}
+            {/* Center Panel: Map */}
             <Box
               sx={{
                 flexGrow: 1,
@@ -166,7 +165,7 @@ const NewPage = () => {
               <MapView
                 center={userLat && userLng ? [userLat, userLng] : null}
                 radius={form.radius}
-                results={results.slice(0, 3)}
+                results={sortedResults.slice(0, 3)} //change the number of datapoints
                 hoveredIndex={null}
               />
             </Box>
@@ -183,11 +182,21 @@ const NewPage = () => {
               }}
             >
               <Typography variant="subtitle1" sx={{ mb: 1 }}>
-                {results.length} {results.length === 1 ? 'facility' : 'facilities'} found
+                {sortedResults.length} {sortedResults.length === 1 ? 'facility' : 'facilities'} found
               </Typography>
-              <ResultsList results={results} userLat={userLat} userLng={userLng} />
+              <ResultsList results={sortedResults} userLat={userLat} userLng={userLng} />
             </Box>
           </Box>
+        )}
+
+        {/* Form (only pre-search) */}
+        {!searchDone && (
+          <FilterForm
+            form={form}
+            errors={errors}
+            onChange={handleChange}
+            onSubmit={handleSubmit}
+          />
         )}
       </Box>
     </Box>

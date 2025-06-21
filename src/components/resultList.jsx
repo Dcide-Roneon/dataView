@@ -3,16 +3,14 @@ import ResultCard from "./ResultsCard";
 import { Button, Divider } from "@mui/material";
 import DownloadIcon from '@mui/icons-material/Download';
 import downloadToCsv from "../utils/downloadToCsv";
+import { getDistanceFromLatLonInKm } from "../utils/distance";
 
-function ResultsList({ results = [], hoveredIndex, setHoveredIndex }) {
+
+function ResultsList({ results = [], userLat, userLng, hoveredIndex, setHoveredIndex }) {
+
+  const limitedResults = results.slice(0,3); //change the result
   // Role-based access placeholder
-  const orderedList = [...results].sort((a, b) => {
-    const aDist = a._distance ?? Infinity;
-    const bDist = b._distance ?? Infinity;
-    return aDist - bDist;
-  });
-
-  const limitedList = orderedList.slice(0, 3); // Adjust based on user role when implemented
+  
 
   if (!Array.isArray(results) || results.length === 0) {
     return <div>No results found</div>;
@@ -31,7 +29,7 @@ function ResultsList({ results = [], hoveredIndex, setHoveredIndex }) {
 
         <Divider sx={{ my: 2 }} />
 
-        {limitedList.map((row, index) => (
+        {limitedResults.map((row, index) => (
           <ResultCard
             key={index}
             row={row}
