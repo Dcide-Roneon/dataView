@@ -9,10 +9,10 @@ import {
 } from "@mui/material";
 import React from "react";
 import { getDistanceFromLatLonInKm } from "../utils/distance";
+import ContactModal from "./contactModal";
 
 const formatNumber = (num) => Number(num).toLocaleString();
-
-const ResultCard = ({ row, total, hovered, onHover, onLeave }) => {
+const ResultCard = ({ row, total, hovered, onHover, onLeave,onClick }) => {
   const distance = getDistanceFromLatLonInKm(
     Number(row.latitude),
     Number(row.longitude)
@@ -21,8 +21,10 @@ const ResultCard = ({ row, total, hovered, onHover, onLeave }) => {
   return (
     <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
       <Card
+        
         onMouseEnter={onHover}
         onMouseLeave={onLeave}
+        onClick={onClick}
         sx={{
           backgroundColor: "white",
           border: hovered ? "2px solid #007BFF" : "1px solid #ccc",
@@ -47,15 +49,28 @@ const ResultCard = ({ row, total, hovered, onHover, onLeave }) => {
               color: "white",
               borderRadius: 2,
               padding: .5,
-              
+              width: "95%%",
             }}
           >
-            <Typography variant="h6" fontWeight="bold">
-              {row.company}
-            </Typography>
-            <Typography variant="body2" color="grey">
-              {row.latitude}, {row.longitude}
-            </Typography>
+            <Stack direction="row">
+              <Box sx={{ ml:1, mr:3}}>
+                <Typography variant="h8" fontWeight="bold">
+                  {row.company}
+                </Typography>
+                <Typography fontWeight="medium" sx={{fontSize: 14}}>
+                   {row.industry}
+                </Typography>
+              </Box>
+              <Box>
+                
+                
+              </Box>
+              <Box sx={{ml:3, mr:2}}>
+                <Typography fontWeight="medium" sx={{fontSize:14}}>
+                    Distance: {row._distance?.toFixed(2)} km
+                  </Typography>
+              </Box>
+            </Stack> 
           </Box>
 
           {/* TWO-COLUMN CONTENT */}
@@ -77,10 +92,7 @@ const ResultCard = ({ row, total, hovered, onHover, onLeave }) => {
               */}
               {/* RIGHT COLUMN */}
               <Stack spacing={1} sx={{ flex: 1 }} alignItems="flex-end">
-                <Chip
-                  label={`Industry: ${row.industry || "N/A"}`}
-                  variant="outlined"
-                />
+                {/*
                 <Chip
                   label={` Est. KW Requirement: ${row.capacity}`}
                   size="small"
@@ -89,37 +101,31 @@ const ResultCard = ({ row, total, hovered, onHover, onLeave }) => {
                   color: "white",
                 }}
               />
-              <Typography variant="body2">
-                Cloud/IT Spend: ${formatNumber(row.cloud_spend)}
-              </Typography>
+              */}
+              <Box sx={{ border:1, padding: 0.5, borderRadius: 3}}>
+                <Typography variant="body2">
+                  Cloud/IT Spend: ${formatNumber(row.cloud_spend)}
+                </Typography>
+              </Box>
               <Chip
                 label={`Use Case: ${row.use_cases || "N/A"}`}
                 variant="outlined"
               />
-              <Chip label="Bucket: Placeholder" variant="outlined" />
+              <Chip label="Suggested Sales Cart" variant="outlined" />
               <Chip label={`Employees: ${formatNumber(row.employee_count)}`} />
+              {/*
               <Chip label="Est. Revenue: Placeholder" variant="outlined" />
               <Typography variant="body2">
                 Contact: {row.contact_details}
               </Typography>
+              */}
             </Stack>
           </Stack>
         </Box>
 
           {/* DIVIDER */}
           <Divider sx={{ my: 2 }} />
-
-          {/* DISTANCE CHIP */}
-          <Box sx={{ display: "flex", justifyContent: "flex-start" }}>
-            <Chip
-              label={`Distance: ${row._distance?.toFixed(2)} km`}
-              size="small"
-              sx={{
-                backgroundColor: "blue",
-                color: "white",
-              }}
-            />
-          </Box>
+          <ContactModal contactDetails = {row.contact_details}/>
         </CardContent>
       </Card>
     </Box>

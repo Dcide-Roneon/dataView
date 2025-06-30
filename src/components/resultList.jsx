@@ -3,7 +3,6 @@ import ResultCard from "./ResultsCard";
 import { Button, Divider } from "@mui/material";
 import DownloadIcon from '@mui/icons-material/Download';
 import downloadToCsv from "../utils/downloadToCsv";
-import { getDistanceFromLatLonInKm } from "../utils/distance";
 
 
 function ResultsList({ results = [], userLat, userLng, hoveredIndex, setHoveredIndex }) {
@@ -20,7 +19,7 @@ function ResultsList({ results = [], userLat, userLng, hoveredIndex, setHoveredI
         <Button
           variant="outlined"
           color="primary"
-          onClick={() => downloadToCsv(results)}
+          onClick={() => downloadToCsv(limitedResults)}
           sx={{ mb: 2, mt: 1, display: 'flex', justifyContent: 'flex-end' }}
           startIcon={<DownloadIcon />}
         >
@@ -37,6 +36,7 @@ function ResultsList({ results = [], userLat, userLng, hoveredIndex, setHoveredI
             hovered={hoveredIndex === index}
             onHover={() => setHoveredIndex(index)}
             onLeave={() => setHoveredIndex(null)}
+            onClick={() => setHoveredIndex(index)}
             index={index}
           />
         ))}

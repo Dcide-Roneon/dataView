@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState } from 'react';
 import { Box, Typography, Stack, Divider } from '@mui/material';
 import useFilterLogic from '../utils/useFilterLogic';
 import FilterPanel from '../components/filterPanel';
@@ -21,11 +22,12 @@ const NewPage = () => {
     userLng,
   } = useFilterLogic();
 
+  const [hoveredIndex, setHoveredIndex] = useState(null);
+
   const enhancedResults = results.map((r) => ({
     ...r,
     _distance: getDistanceFromLatLonInKm(userLat, userLng, r.latitude, r.longitude),
   }));
-
   const sortedResults = enhancedResults.sort((a, b) => {
     const aDist = a._distance ?? Infinity;
     const bDist = b._distance ?? Infinity;
@@ -166,14 +168,14 @@ const NewPage = () => {
                 center={userLat && userLng ? [userLat, userLng] : null}
                 radius={form.radius}
                 results={sortedResults.slice(0, 3)} //change the number of datapoints
-                hoveredIndex={null}
+                hoveredIndex={hoveredIndex}
               />
             </Box>
 
             {/* Right Panel: Results List */}
             <Box
               sx={{
-                width: 350,
+                width: 375,
                 backgroundColor: '#ffffff',
                 padding: 2,
                 borderRadius: 2,
@@ -184,7 +186,13 @@ const NewPage = () => {
               <Typography variant="subtitle1" sx={{ mb: 1 }}>
                 {sortedResults.length} {sortedResults.length === 1 ? 'facility' : 'facilities'} found
               </Typography>
-              <ResultsList results={sortedResults} userLat={userLat} userLng={userLng} />
+              <ResultsList 
+                results={sortedResults}
+                userLat={userLat}
+                userLng={userLng}
+                hoveredIndex={hoveredIndex}
+                setHoveredIndex={setHoveredIndex} 
+                />
             </Box>
           </Box>
         )}

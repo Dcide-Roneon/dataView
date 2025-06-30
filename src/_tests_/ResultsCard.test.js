@@ -20,7 +20,6 @@ describe ('ResultsCard', () =>{
         render(<ResultsCard row={row} userLat={34.06} userLng={-118.25}/>);
         expect(screen.getByText(/Fentigo Enterprises/i)).toBeInTheDocument();
         expect(screen.getByText(/AI Research/i)).toBeInTheDocument();
-        expect(screen.getByText(/skynet@cyberdyne.com/i)).toBeInTheDocument();
         expect(screen.getByText(/Defense/i)).toBeInTheDocument();     
     });
 });
