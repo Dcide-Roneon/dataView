@@ -83,19 +83,19 @@ const NewPage = () => {
       {/* Main Content Area */}
       <Box
         sx={{
+          
           flexGrow: 1,
           backgroundColor: '#faf9f6',
           borderRadius: 2,
           boxShadow: 1,
-          padding: 2,
+          padding: 1,
           boxSizing: 'border-box',
-          height: '100%',
+          height: '110%',
           overflow: 'hidden',
-          mt: 5,
-          m: 3,
+          mb: 4,
           display: 'flex',
           flexDirection: 'column',
-          gap: 2,
+          gap: 1,
         }}
       >
         {/* Pre-search Map (centered) */}
@@ -103,14 +103,14 @@ const NewPage = () => {
           <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
             <Box
               sx={{
-                mt: 5,
+                mt: 1,
                 height: '40vh',
                 width: '45%',
                 minHeight: '300px',
                 borderRadius: 2,
                 overflow: 'hidden',
                 border: '1px solid #ccc',
-                mb: 2,
+                mb: 1,
               }}
             >
               <MapView
@@ -124,7 +124,7 @@ const NewPage = () => {
         )}
 
         {/* Page Title */}
-        <Box sx={{ m: 2 }}>
+        <Box sx={{ ml:5 }}>
           <Stack direction="row" spacing={1}>
             <Typography variant="h5" gutterBottom sx={{ color: '#222428' }}>
               Data
@@ -139,7 +139,7 @@ const NewPage = () => {
               Generator
             </Typography>
           </Stack>
-          <Divider sx={{ my: 2 }} />
+          <Divider sx={{ my: 0.2 }} />
         </Box>
 
         {/* Post-search layout */}

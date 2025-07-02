@@ -181,7 +181,9 @@ const FilterForm = ({ form, errors, onChange, onSubmit, isFilter = false }) => {
                   PaperProps: { style: { maxHeight: 300, width: 300 } },
                 }}
               >
+                {/*
                 <MenuItem onClick={handleSelectAll}>
+
                   <Checkbox
                     checked={selectedCerts.length === certOptions.length}
                     indeterminate={
@@ -189,6 +191,7 @@ const FilterForm = ({ form, errors, onChange, onSubmit, isFilter = false }) => {
                       selectedCerts.length < certOptions.length
                     }
                   />
+                  
                   <ListItemText
                     primary={
                       selectedCerts.length === certOptions.length
@@ -196,7 +199,9 @@ const FilterForm = ({ form, errors, onChange, onSubmit, isFilter = false }) => {
                         : "Select All"
                     }
                   />
+                  
                 </MenuItem>
+                */}
                 <Divider />
                 {filteredCerts.map((cert) => (
                   <MenuItem key={cert} value={cert}>
