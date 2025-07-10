@@ -67,6 +67,17 @@ const NewPage = () => {
               borderRadius: 2,
             }}
           >
+            <Box
+            component={"img"}
+            sx={{
+              width:150,
+              ml:.5,
+              mb:.5
+            }}
+            src="\public\DCIDE Final Logo_Transparent.png"
+            
+            />
+            
             <Typography variant="h6" gutterBottom>
               Filters
             </Typography>

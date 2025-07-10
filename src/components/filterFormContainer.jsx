@@ -150,7 +150,7 @@ const FilterFormContainer = () => {
           </Box>
         )}
 
-        {/* ✅ MapView (center) — always shown */}
+        {/* ✅ MapView (center) */}
         <Box
           sx={{
             flexGrow: 1,
@@ -169,7 +169,7 @@ const FilterFormContainer = () => {
           />
         </Box>
 
-        {/* Results Panel (right) */}
+        {/* Results Panel*/}
         {searchDone && (
           <Box
             sx={{
