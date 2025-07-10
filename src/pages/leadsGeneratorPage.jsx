@@ -74,7 +74,8 @@ const NewPage = () => {
               ml:.5,
               mb:.5
             }}
-            src="\public\DCIDE Final Logo_Transparent.png"
+            src="/DCIDE Final Logo_Transparent.png"
+            alt='DCIDE Logo'
             
             />
             
