@@ -191,7 +191,7 @@ const FilterFormContainer = () => {
         )}
       </Box>
 
-      {/* Loader */}
+      {/* Loader */ }
       {isLoading && (
         <Box mt={4}>
           <LinearWithValueLabel />
