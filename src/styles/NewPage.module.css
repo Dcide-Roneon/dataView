@@ -1,0 +1,30 @@
+.pageContainer {
+  height: 100vh;
+  width: 100vw;
+  background-color: whitesmoke;
+  padding: 16px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.pageTitle {
+  margin-left: 40px; /* 5 * 8px = 40px (MUI spacing unit) */
+}
+
+.darkText {
+  color: #222428;
+}
+
+.highlightText {
+  color: #0f56fc;
+}
+
+.divider {
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+.logo{
+  width: 250px;
+  margin-left: 40vw;
+  margin-bottom: 4px;
+}

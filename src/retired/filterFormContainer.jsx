@@ -1,17 +1,15 @@
 import React, { useState } from "react";
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import {
-  isValidCapacity,
-  isValidLatitude,
-  isValidLongitude,
+  isValidCapacity
 } from "../utils/validation.js";
-import FilterForm from "./filterForm.jsx";
-import LinearWithValueLabel from "./loading.jsx";
-import ResultsList from "./resultList.jsx";
-import MapView from "./mapView.jsx";
+import FilterForm from "../components/filterForm.jsx";
+import LinearWithValueLabel from "../components/loading.jsx";
+import ResultsList from "../components/resultList.jsx";
+import MapView from "../components/mapView.jsx";
 import { Button, Box } from "@mui/material";
 import { fetchFilteredLeads } from "../utils/api.js";
-import FilterPanel from "./filterPanel.jsx";
+import FilterPanel from "../components/filterPanel.jsx";
 
 const initialFormState = {
   company: "",
@@ -154,7 +152,7 @@ const FilterFormContainer = () => {
         <Box
           sx={{
             flexGrow: 1,
-            bgcolor: '#eef4f8',
+            bgcolor: 'black',
             borderRadius: 2,
             overflow: 'hidden',
             boxShadow: 1,
